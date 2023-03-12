@@ -38,6 +38,7 @@ Run with the Pico (W) Console and the wifi connection will be attempted. If succ
 | /keypad/action/0 | Illuminates keys on the keypad in a pattern |
 | /keypad/action/1 | Flashes all keys on keypad red 3 times |
 | /keypad/action/2 | Flashes all keys on keypad green 3 times |
+| /keypad/action/3 | Illuminates keys on the keypad in a wave pattern |
 
 #### Adding more parameters
 - Add the parameter as a key in `REQUESTS` dict in [api_handler.py](/app/api_handler.py)
