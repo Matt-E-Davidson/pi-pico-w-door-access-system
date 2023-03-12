@@ -43,7 +43,7 @@ def reset_key_colour(key):
 
 def reset_key_colours(keys):
     for key in keys:
-        illum_key_with_colour(key, COLOURS[0])
+        reset_key_colour(key)
 
 
 def flash_all_keys(colour, times):
@@ -71,10 +71,28 @@ def loading_pattern():
     kp.update()
 
 
+def wave_pattern():
+    pattern_keys = {"inner": [5, 6, 9, 10],
+                    "outer": [0, 1, 2, 3, 4, 7, 8, 11, 12, 13, 14, 15]}
+    for _ in range(4):
+        for colour in range(2, len(COLOURS)):
+            for key in range(16):
+                if key in pattern_keys["inner"]:
+                    illum_key_with_colour(key, COLOURS[colour])
+                elif key in pattern_keys["outer"]:
+                    illum_key_with_colour(key, COLOURS[colour - 1])
+            kp.update()
+            time.sleep(0.2)
+    reset_key_colours(range(16))
+    kp.update()
+
+
 def kp_actions(action):
     if action == 0:
         loading_pattern()
-    if action == 1:
+    elif action == 1:
         flash_all_keys(COLOURS[1], 3)
-    if action == 2:
+    elif action == 2:
         flash_all_keys(COLOURS[2], 3)
+    elif action == 3:
+        wave_pattern()
