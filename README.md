@@ -23,6 +23,9 @@ Project is using code from [pimoroni's RGB KeyPad example](https://github.com/pi
 
 - VS Code
 - Pico-W-Go extension
+- Pimoroni-picow-micropython uf2 file on pico
+
+Connect pico to computer while holding the BOOTSEL button, drag and drop [uf2](/pimoroni-picow-v1.19.16-micropython.uf2) file onto board. (Note: I have included a version of this file in the project, but I will not be maintaining this so it would be better to check their [releases page](https://github.com/pimoroni/pimoroni-pico/releases))
 
 Clone repository, enter your wifi ssid & password in [example_secrets.py](/example_secrets.py) then rename to 'secrets.py'.
 
@@ -56,6 +59,3 @@ Run with the Pico (W) Console and the wifi connection will be attempted. If succ
 - Need to handle sending entered key combinations from keypad
 - Implement validation of sent combination
 - Better handling of request & response params
-
-
-
