@@ -22,6 +22,8 @@ VALID_KEYS = KEYS.keys()
 def init_kp():
     kp.init()
     kp.set_brightness(1.0)
+    reset_key_colours(range(16))
+    kp.update()
 
 
 def key_to_hex(key):
