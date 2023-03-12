@@ -19,6 +19,7 @@ def connect_to_wifi(wlan):
     if wlan.status() != 3:
         return False
     else:
+        print("Connected to WiFi, pico ip address: ", wlan.ifconfig()[0])
         return True
 
 
