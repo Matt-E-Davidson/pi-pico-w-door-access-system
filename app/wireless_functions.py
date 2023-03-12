@@ -2,8 +2,7 @@ import app.api_handler as api
 import socket
 import time
 
-
-SSID, PASSWORD = '', ''
+from secrets import SSID, PASSWORD
 
 
 def connect_to_wifi(wlan):
