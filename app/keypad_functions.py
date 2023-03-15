@@ -62,15 +62,15 @@ def flash_all_keys(colour, times):
         time.sleep(0.5)
 
 
-def loading_pattern():
-    for _ in range(2):
+def loading_pattern(times):
+    for _ in range(times):
         for i in OUTER_KEYS:
             illum_key_with_colour(i, COLOURS[4])
             kp.update()
-            time.sleep(0.2)
+            time.sleep(0.1)
             reset_key_colour(i)
             kp.update()
-            time.sleep(0.1)
+            time.sleep(0.05)
         reset_key_colours(range(16))
         kp.update()
     reset_key_colours(range(16))
@@ -95,11 +95,12 @@ def take_user_input():
         button_states = kp.get_button_states()
         if button_states > 0:
             if (len(pressed_keys) > 0) and (KEYS[button_states] == pressed_keys[-1]):
-                illum_key_with_colour(KEYS[button_states], COLOURS[(key_colours[-1] + 1) % len(COLOURS)])
+                illum_key_with_colour(KEYS[button_states],
+                                      COLOURS[(key_colours[-1] + 1) % len(COLOURS)])
                 key_colours.append((key_colours[-1] + 1) % len(COLOURS))
             else:
-                illum_key_with_colour(KEYS[button_states], COLOURS[1])
-                key_colours.append(1)
+                illum_key_with_colour(KEYS[button_states], COLOURS[5])
+                key_colours.append(5)
             kp.update()
             pressed_keys.append(KEYS[button_states])
             if len(pressed_keys) == 4:
@@ -111,10 +112,12 @@ def take_user_input():
         time.sleep(0.2)
 
 
-def kp_actions(action):
+def kp_actions(action, times=1):
     if action == 0:
         flash_all_keys(COLOURS[4], 3)
     elif action == 1:
         flash_all_keys(COLOURS[1], 3)
+    elif action == 2:
+        loading_pattern(times)
     else:
         error_pattern()
