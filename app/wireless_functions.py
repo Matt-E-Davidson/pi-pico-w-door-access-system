@@ -1,9 +1,5 @@
-import app.api_handler as api
-import json
-import urequests as requests
-
 from app.keypad_functions import kp_actions
-from secrets import SSID, PASSWORD, SERVER
+from secrets import SSID, PASSWORD
 
 
 def connect_to_wifi(wlan):
@@ -17,12 +13,3 @@ def connect_to_wifi(wlan):
         return False
     else:
         return True
-
-
-def send_request(body):
-    try:
-        response = requests.get(SERVER, json=body)
-        api.process_request(json.loads(response.text))
-        response.close()
-    except OSError as e:
-        print("Request failed: ", e)

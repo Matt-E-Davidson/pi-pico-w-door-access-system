@@ -1,11 +1,12 @@
 import network
-import app.wireless_functions as wf
-from app.keypad_functions import init_kp, kp_actions, take_user_input, COLOURS
+
+from app.keypad_functions import init_kp, take_user_input, kp_actions
+from app.wireless_functions import connect_to_wifi
 
 
 def main():
     init_kp()
-    if wf.connect_to_wifi(network.WLAN(network.STA_IF)):
+    if connect_to_wifi(network.WLAN(network.STA_IF)):
         kp_actions(0)
         while True:
             take_user_input()

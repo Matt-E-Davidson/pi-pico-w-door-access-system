@@ -1,6 +1,7 @@
-import app.api_handler as api
 import picokeypad as kp
 import time
+
+from app.api_handler import get_code_length, send_code
 
 
 KEYS = {0x0001: 0, 0x0002: 1,
@@ -12,9 +13,11 @@ KEYS = {0x0001: 0, 0x0002: 1,
         0x1000: 12, 0x2000: 13,
         0x4000: 14, 0x8000: 15}
 
-COLOURS = {0: [0x05, 0x05, 0x05], 1: [0xff, 0x00, 0x00], 2: [0xff, 0x7f, 0x00],
-           3: [0xff, 0xff, 0x00], 4: [0x00, 0xff, 0x00], 5: [0x00, 0x00, 0xff],
-           6: [0x4b, 0x00, 0x82], 7: [0x94, 0x00, 0xd3]}
+DEFAULT_COLOUR = [0x05, 0x05, 0x05]
+
+COLOURS = {0: [0xff, 0x00, 0x00], 1: [0xff, 0x7f, 0x00],
+           2: [0xff, 0xff, 0x00], 3: [0x00, 0xff, 0x00], 4: [0x00, 0x00, 0xff],
+           5: [0x4b, 0x00, 0x82], 6: [0x94, 0x00, 0xd3]}
 
 OUTER_KEYS = [0, 1, 2, 3, 7, 11, 15, 14, 13, 12, 8, 4]
 INNER_KEYS = [5, 6, 9, 10]
@@ -44,7 +47,7 @@ def illum_keys_with_colour(keys, colour):
 
 
 def reset_key_colour(key):
-    illum_key_with_colour(key, COLOURS[0])
+    illum_key_with_colour(key, DEFAULT_COLOUR)
 
 
 def reset_key_colours(keys):
@@ -65,7 +68,7 @@ def flash_all_keys(colour, times):
 def loading_pattern(times):
     for _ in range(times):
         for i in OUTER_KEYS:
-            illum_key_with_colour(i, COLOURS[4])
+            illum_key_with_colour(i, COLOURS[3])
             kp.update()
             time.sleep(0.1)
             reset_key_colour(i)
@@ -79,7 +82,7 @@ def loading_pattern(times):
 
 def error_pattern():
     for _ in range(10):
-        for colour in [1, 2]:
+        for colour in [0, 1]:
             illum_keys_with_colour(INNER_KEYS, COLOURS[colour])
             illum_keys_with_colour(OUTER_KEYS, COLOURS[colour - 1])
             kp.update()
@@ -91,20 +94,17 @@ def error_pattern():
 def take_user_input():
     pressed_keys = []
     key_colours = []
+    code_length = get_code_length()
     while True:
         button_states = kp.get_button_states()
         if button_states > 0:
-            if (len(pressed_keys) > 0) and (KEYS[button_states] == pressed_keys[-1]):
-                illum_key_with_colour(KEYS[button_states],
-                                      COLOURS[(key_colours[-1] + 1) % len(COLOURS)])
-                key_colours.append((key_colours[-1] + 1) % len(COLOURS))
-            else:
-                illum_key_with_colour(KEYS[button_states], COLOURS[5])
-                key_colours.append(5)
+            key_colour = (pressed_keys.count(KEYS[button_states]) + 4) % len(COLOURS)
+            illum_key_with_colour(KEYS[button_states], COLOURS[key_colour])
             kp.update()
+            key_colours.append(key_colour)
             pressed_keys.append(KEYS[button_states])
-            if len(pressed_keys) == 4:
-                api.send_code(pressed_keys)
+            if len(pressed_keys) == code_length:
+                send_code(pressed_keys)
                 for key in pressed_keys:
                     reset_key_colour(key)
                     kp.update()
@@ -114,9 +114,9 @@ def take_user_input():
 
 def kp_actions(action, times=1):
     if action == 0:
-        flash_all_keys(COLOURS[4], 3)
+        flash_all_keys(COLOURS[3], 3)
     elif action == 1:
-        flash_all_keys(COLOURS[1], 3)
+        flash_all_keys(COLOURS[0], 3)
     elif action == 2:
         loading_pattern(times)
     else:
